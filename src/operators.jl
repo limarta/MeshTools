@@ -8,7 +8,7 @@ function cot_laplacian(V,F)
         i, j, k = perm
         u = V[:,F[i,:]] - V[:, F[k,:]]
         v = V[:, F[j,:]] - V[:, F[k,:]]
-        cotAlpha = vec(abs.(vdot(u,v; dims=1)) ./ norm(multicross(u,v); dims=1))
+        cotAlpha = vec(abs.(vdot(u,v; dims=1))) ./ norm.(eachcol(multicross(u,v)))
         cots[:,i] = cotAlpha
 
     end
@@ -35,6 +35,12 @@ function get_operators(mesh::Mesh; k=200)
     grad_x = convert.(Float32, grad_x)
     grad_y = convert.(Float32, grad_y)
     mesh.cot_laplacian, convert.(Float32, mesh.vertex_area), λ, ϕ, grad_x, grad_y
+end
+
+ops = (:cot_laplacian,)
+# TODO: Figure out how to automate with macros :)
+for op in ops
+    eval(:($op(mesh::Mesh) = $op(mesh.V, mesh.F)))
 end
 # cot_laplacian(mesh::Mesh) = cot_laplacian(mesh.V, mesh.F)
 # FtoV(mesh::Mesh) = FtoV(mesh.V, mesh.F, face_area(mesh))
