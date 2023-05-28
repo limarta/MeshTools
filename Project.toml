@@ -1,0 +1,7 @@
+name = "MeshTools"
+uuid = "f52d8617-ac12-4ead-9403-65bee92ea2d2"
+authors = ["Ian Limarta <ian.limarta@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+PlyIO = "42171d58-473b-503a-8d5f-782019eb09ec"
