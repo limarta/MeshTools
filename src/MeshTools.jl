@@ -8,8 +8,11 @@ multicross(x,y) = reduce(hcat, cross.(eachcol(x), eachcol(y)))
 
 include("mesh.jl")
 include("geom.jl")
+include("laplacian/laplacian.jl")
 include("operators.jl")
 include("vectorfield.jl")
 include("read.jl")
+
+export Mesh, cot_laplacian
 
 end # module MeshTools

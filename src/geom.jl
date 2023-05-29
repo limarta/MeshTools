@@ -38,6 +38,14 @@ function vertex_normals(V,F)
     return n
 end
 
+function FtoV(V,F, face_area)
+    A = face_area
+    nf = size(F)[2]
+    nv = size(V)[2]
+    G = sparse(vec(F), vec(repeat(1:nf, 1, 3)'), vec(repeat(A, 1, 3)'), nv, nf)
+    G = (G' ./ A)'
+end
+
 # function normalize_mesh(V,F)
 #     Z = maximum(vec(norm(V,dims=1)))
 #     V ./= Z
@@ -53,9 +61,8 @@ end
 # Convenience Methods
 ######################
 
-ops = (:face_area_normals, :face_area, :face_centers, :face_normals, :vertex_area, :vertex_normals)
 # TODO: Figure out how to automate with macros :)
-for op in ops
+for op in (:face_area_normals, :face_area, :face_centers, :face_normals, :vertex_area, :vertex_normals)
     eval(:($op(mesh::Mesh) = $op(mesh.V, mesh.F)))
 end
 # macro convenience(ops...)
