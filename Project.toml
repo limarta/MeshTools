@@ -4,8 +4,9 @@ authors = ["Ian Limarta <ian.limarta@gmail.com>"]
 version = "0.1.0"
 
 [deps]
-Arpack = "7d9fca2a-8960-54d3-9f78-7d1dccf2cb97"
+ArnoldiMethod = "ec485272-7323-5ecc-a04f-4719b315124d"
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+LinearMaps = "7a12625a-238d-50fd-b39a-03d52299707e"
 PlyIO = "42171d58-473b-503a-8d5f-782019eb09ec"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"

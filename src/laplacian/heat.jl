@@ -23,7 +23,7 @@ function heat_implicit(L, A, signal; dt=0.001, steps=1)
     D = cholesky(M+dt*L)
     heat = signal
     for t=1:steps
-        heat = D \ (heat .* A)
+        heat = D \ (heat)
     end
     return heat
 end
