@@ -10,7 +10,7 @@ V,F = MeshTools.readoff("examples/michael1.off")
 mesh = MeshTools.Mesh(V,F)
 L = cot_laplacian(mesh)
 A = MeshTools.vertex_area(V,F)
-λ, ϕ = eigs(L, nev=128, sigma=0)
+# λ, ϕ = eigs(L, nev=128, sigma=0)
 
 
 # Define a matrix whose eigenvalues you want
