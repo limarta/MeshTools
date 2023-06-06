@@ -41,6 +41,7 @@ function laplacian_basis(L, A; k=20, mode::Symbol = :arnoldi)
     elseif mode == :arpack
         λ, ϕ  = eigs(L, A, nev=k, sigma=1e-6)
         λ = real.(λ)
+        λ[1] = 0
         ϕ = real.(ϕ)
         # Normalize wrt to A
         Z = sqrt.(vec(sum(ϕ .* (A * ϕ), dims=1)))

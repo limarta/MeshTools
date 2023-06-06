@@ -1,21 +1,38 @@
-function heatKernelSignature(λ, ϕ, A, t)
-    hks = 0
-end
+
 using Arpack
 using LinearAlgebra
 using SparseArrays
+using LinearAlgebra
 using MeshTools
 V,F = MeshTools.readoff("examples/michael1.off")
 mesh = MeshTools.Mesh(V,F)
 L = cot_laplacian(mesh)
 A = MeshTools.vertex_area(V,F)
 Asp = spdiagm(A)
-λ, ϕ =  MeshTools.laplacian_basis(L, Asp, k=128, mode=:arpack)
-dot(ϕ[:,1], Asp* ϕ[:,1])
-dot(ϕ[:,1], Asp * ϕ[:,2])
-norm(L * ϕ[:,1] - λ[1] * Asp * ϕ[:,1]) / (norm(ϕ[:,1]))
+λ, ϕ =  MeshTools.laplacian_basis(L, Asp, k=400, mode=:arpack)
+# dot(ϕ[:,1], Asp* ϕ[:,1])
+# dot(ϕ[:,1], Asp * ϕ[:,2])
+# norm(L * ϕ[:,1] - λ[1] * Asp * ϕ[:,1]) / (norm(ϕ[:,1]))
 
-# TODO: Area-agnostic hks
+function heatKernelSignature(λ, ϕ, A, t)
+    c = (A*ϕ)' .* exp.(-λ.* t)
+    hks = sum(ϕ' .* c, dims=1)
+    
+    # Which is correct?
+    D = ϕ' * (A * ϕ.^2);
+    T = exp.(-(λ.*t));
+    hks = D*T;
+    hks = ϕ*hks;
+end
+
+t = 0.0
+hks = heatKernelSignature(λ, ϕ, Asp, t)
+hks
+
+f = zeros(mesh.nv)
+f[1] = 1
+t = 1.0
+ϕ * (vec(sum(f' * (Asp * ϕ),dims=1)) .* exp.(-λ .* t))
 
 # function heat_spectral(λ::Vector, ϕ::Matrix, init, t; A=nothing)
 #     """
