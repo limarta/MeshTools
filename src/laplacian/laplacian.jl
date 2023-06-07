@@ -51,9 +51,15 @@ function laplacian_basis(L, A; k=20, mode::Symbol = :arnoldi)
         error()
     end
 end
-# function laplacian_basis(L)
-#     eigs()
-# end
+
+function tufted_laplacian()
+    # https://www.cs.cmu.edu/~kmcrane/Projects/NonmanifoldLaplace/index.html
+end
+
+function unweighted_laplacian()
+
+end
+
 
 # TODO: Figure out how to automate with macros :)
 for op in (:cot_laplacian,)
@@ -61,4 +67,3 @@ for op in (:cot_laplacian,)
 end
 
 export cot_laplacian
-include("heat.jl")
