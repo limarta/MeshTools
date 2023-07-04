@@ -1,3 +1,16 @@
+abstract type Laplacian end
+struct CotLaplacian{T<:Real} <: Laplacian 
+    L::Matrix{T}
+end
+struct UnweightedLaplacian{T<:Real} <: Laplacian 
+    L::Matrix{T}
+end
+
+struct GeometryInfo{T,L<:Laplacian}
+    mesh::Mesh{T}
+    laplacian::L
+end
+
 function cot_laplacian(V,F)
     nv = size(V)[2]
     nf = size(F)[2]
@@ -39,7 +52,7 @@ function laplacian_basis(L, A; k=20, mode::Symbol = :arnoldi)
 # λs_inv, X =  eig(L)
         error()
     elseif mode == :arpack
-        λ, ϕ  = eigs(L, A, nev=k, sigma=1e-6)
+        λ, ϕ  = eigs(L, A, nev=k, maxiter = 200, sigma=1e-6)
         λ = real.(λ)
         λ[1] = 0
         ϕ = real.(ϕ)
@@ -56,14 +69,20 @@ function tufted_laplacian()
     # https://www.cs.cmu.edu/~kmcrane/Projects/NonmanifoldLaplace/index.html
 end
 
-function unweighted_laplacian()
-
+function unweighted_laplacian(V,F)
+    I = F[1,:]; J = F[2,:]; K = F[3,:];
+    nv = size(V,2)
+    nf = size(F,2)
+    O = ones(nf)
+    A = sparse([I;J;K], [J;K;I], [O;O;O], nv, nv)
+    D = spdiagm(vec(sum(A, dims=2)))
+    L = D - A
 end
 
 
 # TODO: Figure out how to automate with macros :)
-for op in (:cot_laplacian,)
+for op in (:cot_laplacian,:unweighted_laplacian)
     eval(:($op(mesh::Mesh) = $op(mesh.V, mesh.F)))
 end
 
-export cot_laplacian
+export cot_laplacian, unweighted_laplacian

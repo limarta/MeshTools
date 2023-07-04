@@ -1,11 +1,11 @@
 # Triangular meshes
-struct Mesh
-    V::Matrix  # |V|×3
+struct Mesh{T<:Real}
+    V::Matrix{T}  # |V|×3
     F::Matrix{Int} # |F|×3
-    face_normals::Matrix
-    vertex_normals::Matrix
-    face_area::Vector
-    vertex_area::Vector
+    face_normals::Matrix{T}
+    vertex_normals::Matrix{T}
+    face_area::Vector{T}
+    vertex_area::Vector{T}
     nv::Int # vertex count
     nf::Int # face count
 end
@@ -23,11 +23,3 @@ function Base.copy(mesh::Mesh)
         copy(mesh.face_normals), copy(mesh.vertex_normals), copy(mesh.face_area), copy(mesh.vertex_area),
         mesh.nv, mesh.nf) 
 end
-
-# mutable struct MeshOperators
-# # ∇_x
-# # ∇_y
-# # FtoV
-#     cot_laplacian
-# end
-

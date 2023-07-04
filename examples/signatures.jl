@@ -1,4 +1,5 @@
 using Arpack
+using IterativeSolvers
 using LinearAlgebra
 using SparseArrays
 using LinearAlgebra
@@ -8,7 +9,10 @@ mesh = MeshTools.Mesh(V,F)
 L = cot_laplacian(mesh)
 A = MeshTools.vertex_area(V,F)
 Asp = spdiagm(A)
-λ, ϕ =  MeshTools.laplacian_basis(L, Asp, k=20, mode=:arpack)
+
+@time λ, ϕ =  MeshTools.laplacian_basis(L, Asp, k=200, mode=:arpack)
+@time IterativeSolvers.lobpcg(L, Asp, false, 200)
+
 dot(ϕ[:,1], Asp* ϕ[:,1])
 dot(ϕ[:,1], Asp * ϕ[:,2])
 norm(L * ϕ[:,1] - λ[1] * Asp * ϕ[:,1]) / (norm(ϕ[:,1]))

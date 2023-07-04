@@ -1,0 +1,6 @@
+[MPIPreferences]
+_format = "1.0"
+abi = "OpenMPI"
+binary = "system"
+libmpi = "/opt/homebrew/Cellar/open-mpi/4.1.5/lib/libmpi.dylib"
+mpiexec = "mpiexec"

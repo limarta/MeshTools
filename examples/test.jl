@@ -26,6 +26,7 @@ function eig(L)
     λs_inv, X = partialeigen(decomp)
 end
 λs_inv, X =  eig(L)
+@code_warntype eig(L)
 
 # Eigenvalues have to be inverted to find the smallest eigenvalues of the non-inverted problem.
 λs = 1 ./ λs_inv
