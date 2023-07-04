@@ -1,7 +1,6 @@
 using MeshTools
 using Arpack
-V,F = MeshTools.readoff("examples/cat0.off")
+V,F = MeshTools.readoff("examples/gourd.off")
 mesh = MeshTools.Mesh(V,F)
-L = unweighted_laplacian(mesh)
-k = 10
-eigs(L, nev=k, maxiter = 200, sigma=1e-6)
+L = cot_laplacian(mesh)
+heat_method(mesh, L, 1)

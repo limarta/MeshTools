@@ -28,6 +28,16 @@ function heat_implicit(L, A, init; dt=0.001, steps=1)
     return heat
 end
 
+function heat_implicit(mesh::Mesh, L, init; dt=0.001, steps=1)
+    heat_implicit(L, vertex_area(mesh), init, dt=dt, steps=steps)
+    # D = cholesky(M+dt*L)
+    # heat = init
+    # for t=1:steps
+        # heat = D \ (M*heat)
+    # end
+    # return heat
+end
+
 function heat_spectral(λ::Vector, ϕ::Matrix, init, t)
     """
     init - |V| or |V|×|C|

@@ -1,9 +1,9 @@
 abstract type Laplacian end
 struct CotLaplacian{T<:Real} <: Laplacian 
-    L::Matrix{T}
+    L::AbstractMatrix{T}
 end
 struct UnweightedLaplacian{T<:Real} <: Laplacian 
-    L::Matrix{T}
+    L::AbstractMatrix{T}
 end
 
 struct GeometryInfo{T,L<:Laplacian}

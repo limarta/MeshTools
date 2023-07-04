@@ -4,7 +4,7 @@ function face_grad(mesh::Mesh)
     F = mesh.F
     ∇ = spzeros(3 * mesh.nf, mesh.nv)
     A = face_area(mesh)
-    N = mesh.normals
+    N = mesh.face_normals
     for f=1:mesh.nf
         u, v, w = F[:,f]
         vw = V[:,w] - V[:,v]
@@ -104,3 +104,9 @@ function world_coordinates(mesh::Mesh, gradients)
     x_2 = gradients[2,:]' .* frame[:,:,2] 
     x_1 + x_2
 end
+
+function div(mesh::Mesh)
+    return zeros(mesh.nf, 3*mesh.nf)
+end
+
+export face_grad, vertex_grad
