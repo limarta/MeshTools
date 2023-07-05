@@ -1,5 +1,4 @@
 function face_grad(mesh::Mesh)
-    cot(v1, v2) = dot(v1, v2) / norm(cross(v1, v2))
     V = mesh.V
     F = mesh.F
     ∇ = spzeros(3 * mesh.nf, mesh.nv)
@@ -106,7 +105,32 @@ function world_coordinates(mesh::Mesh, gradients)
 end
 
 function div(mesh::Mesh)
-    return zeros(mesh.nf, 3*mesh.nf)
+    # ∇⋅ is |V|×3|F|
+    V = mesh.V
+    F = mesh.F
+    ∇ = spzeros(mesh.nv, 3 * mesh.nf)
+    uv = V[:,F[1,:]] - V[:,F[2,:]]
+    vw = V[:,F[2,:]] - V[:,F[3,:]]
+    wu = V[:,F[3,:]] - V[:,F[1,:]]
+    c = [sum(uv.*wu; dims=1); sum(vw.*uv; dims=1); sum(wu.*vw; dims=1)]
+    s = [norm.(cross.(eachcol(uv), eachcol(vw)));;
+        norm.(cross.(eachcol(vw), eachcol(wu)));;
+        norm.(cross.(eachcol(wu), eachcol(uv)))]'
+    cot = c ./ s
+    for f=1:mesh.nf
+        u,v,w = F[:,f]
+        println(u, " " ,v, " ", w)
+        uv = V[:,v] - V[:,u]
+        vw = V[:,w] - V[:,v]
+        wu = V[:,u] - V[:,w]
+        θ = cot[:, f]
+
+        J = 3f .+ (-2:0)
+        ∇[u, J] = θ[2] * uv - θ[3]* wu
+        ∇[v, J] = -θ[1] * uv + θ[3] * wu
+        ∇[w, J] = θ[1] * wu - θ[2] * vw
+    end
+    ∇ ./ 2
 end
 
 export face_grad, vertex_grad

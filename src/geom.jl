@@ -28,7 +28,7 @@ end
 
 function vertex_normals(V,F)
     A = face_area_normals(V, F)
-    n = zero(V)
+    n = zeros(size(V))
     for (i, f) in enumerate(eachcol(F))
         for v in f
             n[:, v] += A[:, i]

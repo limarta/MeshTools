@@ -9,10 +9,9 @@ multicross(x,y) = reduce(hcat, cross.(eachcol(x), eachcol(y)))
 
 include("mesh.jl")
 include("geom.jl")
-include("vectorfield/vectorfield.jl")
-include("laplacian/laplacian.jl")
+include("operators/operators.jl")
+# include("vectorfield/vectorfield.jl")
 include("descriptors/descriptors.jl")
-include("operators.jl")
 include("geodesics/geodesic.jl")
 include("read.jl")
 

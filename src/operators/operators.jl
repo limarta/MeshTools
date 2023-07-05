@@ -5,3 +5,6 @@ function get_operators(mesh::Mesh; k=200)
     grad_y = convert.(Float32, grad_y)
     mesh.cot_laplacian, convert.(Float32, mesh.vertex_area), λ, ϕ, grad_x, grad_y
 end
+
+include("vectorfield.jl")
+include("laplacian.jl")

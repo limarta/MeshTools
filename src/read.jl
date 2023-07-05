@@ -26,7 +26,8 @@ function readply(fname)
     y = ply["vertex"]["y"]
     z = ply["vertex"]["z"]
     V = hcat(x,y,z)'
-    F = stack(ply["face"]["vertex_indices"])'
+    display(V)
+    F = stack(ply["face"]["vertex_indices"]) .+ 1
     # points = Meshes.Point3.(x, y, z)
     V, F
 end

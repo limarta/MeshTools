@@ -12,6 +12,7 @@ struct GeometryInfo{T,L<:Laplacian}
 end
 
 function cot_laplacian(V,F)
+    # WRong
     nv = size(V)[2]
     nf = size(F)[2]
     #For all 3 shifts of the roles of triangle vertices
