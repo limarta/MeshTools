@@ -22,10 +22,10 @@ function cot_laplacian(V,F)
         i, j, k = perm
         u = V[:,F[i,:]] - V[:, F[k,:]]
         v = V[:, F[j,:]] - V[:, F[k,:]]
-        cotAlpha = vec(abs.(vdot(u,v; dims=1))) ./ norm.(eachcol(multicross(u,v)))
+        cotAlpha = vec(vdot(u,v; dims=1)) ./ norm.(eachcol(multicross(u,v)))
         cots[:,i] = cotAlpha
-
     end
+
     I = F[1,:]; J = F[2,:]; K = F[3,:];
 
     L = sparse([I;J;K], [J;K;I], [cots[:,1];cots[:,2];cots[:,3]], nv, nv)

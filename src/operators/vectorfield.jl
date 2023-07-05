@@ -4,15 +4,33 @@ function face_grad(mesh::Mesh)
     ∇ = spzeros(3 * mesh.nf, mesh.nv)
     A = face_area(mesh)
     N = mesh.face_normals
-    for f=1:mesh.nf
-        u, v, w = F[:,f]
-        vw = V[:,w] - V[:,v]
-        wu = V[:,u] - V[:,w]
-        uv = V[:,v] - V[:,u]
-        J = 3f .+ (-2:0)
-        ∇[J, u], ∇[J, v], ∇[J, w] = map(e->cross(N[:,f], e)/2A[f], [vw, wu, uv])
-    end
-    return ∇
+
+    u = repeat(F[1,:], inner=3)
+    v = repeat(F[2,:], inner=3)
+    w = repeat(F[3,:], inner=3)
+    uv = V[:,F[2,:]] - V[:,F[1,:]]
+    vw = V[:,F[3,:]] - V[:,F[2,:]]
+    wu = V[:,F[1,:]] - V[:,F[3,:]]
+    J = 1:3*mesh.nf
+    G2 = cross.(eachcol(N), eachcol(wu)) ./ A
+    G1 = cross.(eachcol(N), eachcol(vw)) ./ A
+    G3 = cross.(eachcol(N), eachcol(uv)) ./ A
+    G1 = collect(Iterators.flatten(G1))
+    G2 = collect(Iterators.flatten(G2))
+    G3 = collect(Iterators.flatten(G3))
+    g = sparse([J;J;J], [u;v;w], [G1; G2; G3], 3*mesh.nf, mesh.nv)
+    g ./= 2
+
+    # for f=1:mesh.nf
+    #     u, v, w = F[:,f]
+    #     vw = V[:,w] - V[:,v]
+    #     wu = V[:,u] - V[:,w]
+    #     uv = V[:,v] - V[:,u]
+    #     J = 3f .+ (-2:0)
+    #     ∇[J, u], ∇[J, v], ∇[J, w] = map(e->cross(N[:,f], e)/2A[f], [vw, wu, uv])
+    # end
+    # println(norm(g - ∇))
+    return g
 end
 
 function vertex_grad(V,F,N)
@@ -108,29 +126,26 @@ function div(mesh::Mesh)
     # ∇⋅ is |V|×3|F|
     V = mesh.V
     F = mesh.F
-    ∇ = spzeros(mesh.nv, 3 * mesh.nf)
-    uv = V[:,F[1,:]] - V[:,F[2,:]]
-    vw = V[:,F[2,:]] - V[:,F[3,:]]
-    wu = V[:,F[3,:]] - V[:,F[1,:]]
-    c = [sum(uv.*wu; dims=1); sum(vw.*uv; dims=1); sum(wu.*vw; dims=1)]
-    s = [norm.(cross.(eachcol(uv), eachcol(vw)));;
-        norm.(cross.(eachcol(vw), eachcol(wu)));;
-        norm.(cross.(eachcol(wu), eachcol(uv)))]'
-    cot = c ./ s
-    for f=1:mesh.nf
-        u,v,w = F[:,f]
-        println(u, " " ,v, " ", w)
-        uv = V[:,v] - V[:,u]
-        vw = V[:,w] - V[:,v]
-        wu = V[:,u] - V[:,w]
-        θ = cot[:, f]
+    # ∇ = spzeros(mesh.nv, 3 * mesh.nf)
+    uv = V[:,F[2,:]] - V[:,F[1,:]]
+    vw = V[:,F[3,:]] - V[:,F[2,:]]
+    wu = V[:,F[1,:]] - V[:,F[3,:]]
+    cotan = -[sum(uv.*wu; dims=1); sum(vw.*uv; dims=1); sum(wu.*vw; dims=1)]
+    s = [norm.(cross.(eachcol(uv), eachcol(wu)));;
+        norm.(cross.(eachcol(vw), eachcol(uv)));;
+        norm.(cross.(eachcol(wu), eachcol(vw)))]'
+    cotan ./= s
 
-        J = 3f .+ (-2:0)
-        ∇[u, J] = θ[2] * uv - θ[3]* wu
-        ∇[v, J] = -θ[1] * uv + θ[3] * wu
-        ∇[w, J] = θ[1] * wu - θ[2] * vw
-    end
-    ∇ ./ 2
+    u = repeat(F[1,:], inner=3)
+    v = repeat(F[2,:], inner=3)
+    w = repeat(F[3,:], inner=3)
+    J = 1:3*mesh.nf
+    A = vec(cotan[2,:]' .* uv - cotan[3,:]' .* wu)
+    B = vec(-cotan[1,:]' .* uv + cotan[3,:]' .* wu)
+    C = vec(cotan[1,:]' .* wu - cotan[2,:]' .* vw)
+    ∇ = sparse([u;v;w], [J;J;J], [A;B;C], mesh.nv, 3*mesh.nf)
+    ∇ ./= 2
+
 end
 
 export face_grad, vertex_grad

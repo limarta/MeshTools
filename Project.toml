@@ -15,6 +15,7 @@ MPI = "da04e1cc-30fd-572f-bb4f-1f8673147195"
 MPIPreferences = "3da0fdf6-3ccc-4f1b-acd9-58baa6c99267"
 PRIMME_jll = "9916bc9e-ef43-57a6-9be0-2f3f923f8145"
 PlyIO = "42171d58-473b-503a-8d5f-782019eb09ec"
+ProfileView = "c46f51b8-102a-5cf2-8d2c-8597cb0e0da7"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [compat]
