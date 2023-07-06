@@ -21,15 +21,6 @@ function face_grad(mesh::Mesh)
     g = sparse([J;J;J], [u;v;w], [G1; G2; G3], 3*mesh.nf, mesh.nv)
     g ./= 2
 
-    # for f=1:mesh.nf
-    #     u, v, w = F[:,f]
-    #     vw = V[:,w] - V[:,v]
-    #     wu = V[:,u] - V[:,w]
-    #     uv = V[:,v] - V[:,u]
-    #     J = 3f .+ (-2:0)
-    #     ∇[J, u], ∇[J, v], ∇[J, w] = map(e->cross(N[:,f], e)/2A[f], [vw, wu, uv])
-    # end
-    # println(norm(g - ∇))
     return g
 end
 
@@ -126,7 +117,6 @@ function div(mesh::Mesh)
     # ∇⋅ is |V|×3|F|
     V = mesh.V
     F = mesh.F
-    # ∇ = spzeros(mesh.nv, 3 * mesh.nf)
     uv = V[:,F[2,:]] - V[:,F[1,:]]
     vw = V[:,F[3,:]] - V[:,F[2,:]]
     wu = V[:,F[1,:]] - V[:,F[3,:]]
@@ -140,9 +130,9 @@ function div(mesh::Mesh)
     v = repeat(F[2,:], inner=3)
     w = repeat(F[3,:], inner=3)
     J = 1:3*mesh.nf
-    A = vec(cotan[2,:]' .* uv - cotan[3,:]' .* wu)
-    B = vec(-cotan[1,:]' .* uv + cotan[3,:]' .* wu)
-    C = vec(cotan[1,:]' .* wu - cotan[2,:]' .* vw)
+    A = vec(-cotan[2,:]' .* wu + cotan[3,:]' .* uv)
+    B = vec(cotan[1,:]' .* vw - cotan[3,:]' .* uv)
+    C = vec(-cotan[1,:]' .* vw + cotan[2,:]' .* wu)
     ∇ = sparse([u;v;w], [J;J;J], [A;B;C], mesh.nv, 3*mesh.nf)
     ∇ ./= 2
 
