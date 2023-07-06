@@ -8,4 +8,3 @@ L = cot_laplacian(mesh)
 # heat_method(mesh, L, 1)
 Div = MeshTools.div(mesh);
 grad = MeshTools.face_grad(mesh)
-# println(norm(D * grad + L)/norm(L))

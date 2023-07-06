@@ -17,6 +17,7 @@ PRIMME_jll = "9916bc9e-ef43-57a6-9be0-2f3f923f8145"
 PlyIO = "42171d58-473b-503a-8d5f-782019eb09ec"
 ProfileView = "c46f51b8-102a-5cf2-8d2c-8597cb0e0da7"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+WGLMakie = "276b4fcb-3e11-5398-bf8b-a0c2d153d008"
 
 [compat]
 Arpack = "0.5.3"
