@@ -1,7 +1,6 @@
 function face_grad(mesh::Mesh)
     V = mesh.V
     F = mesh.F
-    ∇ = spzeros(3 * mesh.nf, mesh.nv)
     A = face_area(mesh)
     N = mesh.face_normals
 

@@ -15,4 +15,7 @@ function heat_method(mesh::Mesh, L, i; dt = 1.0)
     dist .-= minimum(dist)
     dist
 end
+
+function heat_method(mesh::Mesh)
+end
 export heat_method
