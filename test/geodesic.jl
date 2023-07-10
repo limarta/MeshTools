@@ -3,7 +3,7 @@ using LinearAlgebra
 using Rotations
 include("viz.jl")
 # V,F = MeshTools.readply("examples/icosahedron.ply")
-V,F = MeshTools.readoff("examples/decimated-knight.off")
+V,F = MeshTools.readoff("examples/cat0.off")
 mesh = MeshTools.Mesh(V,F)
 L = cot_laplacian(mesh)
 source = 1
@@ -24,6 +24,6 @@ constraints = Dict{Int, Vector{Float64}}(k=>rot*V[:,k] for k=1:10:mesh.nv)
 new_mesh = arap_minimization(mesh, constraints, L);
 # println("Norm ", norm(mesh.V - new_mesh.V))
 # ax3, msh3 = mesh(fig[1, 3], X, T, color=dist[:], shading=false, colormap=:heat)
-meshviz(mesh, shift_coordinates=false, color=dist, colormap=:heat)
+meshviz(mesh, shift_coordinates=false, color=dist, colormap=:prism)
 meshviz(new_mesh, shift_coordinates=false, color=dist, colormap=:heat)
 # viz_point!(mesh, source, shift_coordinates=false, color=:pink, markersize=100)
