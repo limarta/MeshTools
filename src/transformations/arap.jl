@@ -16,6 +16,7 @@ function arap_energy(V1, V2, arap_state)
     end
     E
 end
+
 arap_energy(mesh1::Mesh, mesh2::Mesh, arap_state) = arap_energy(mesh1.V, mesh2.V, arap_state)
 
 vmul(A,B) = eachcol(A) .* transpose.(eachcol(B))

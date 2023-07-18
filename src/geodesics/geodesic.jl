@@ -57,11 +57,16 @@ end
 
 function eikonal_update(V, d)
     Q = inv(V' * V)
-    disc = sum(Q * d)^2 - (sum(Q) * (d' * Q * d -1))
-    if disc < 0
-        return Inf
-    end
+    disc = max(0,sum(Q * d)^2 - (sum(Q) * (d' * Q * d -1)))
     p = (sum(Q * d) + sqrt(disc)) / sum(Q)
+    n = pinv(V') * (p.-d)
+    n ./= norm(n)
+    mono = Q * V' * n
+    if mono[1] < 0 && mono[2] < 0
+        return p
+    else
+        return minimum(d + norm.(eachcol(V)))
+    end
 end
 
 export fast_marching, eikonal_update, heat_method
